@@ -1,7 +1,17 @@
+misc
+report
+data
+.DS_Store
+.gitignore
+config.py
+Untitled.ipynb
+L4-QnA.ipynb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+.ipynb_checkpoints
 
 # C extensions
 *.so
