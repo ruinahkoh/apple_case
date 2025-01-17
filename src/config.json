@@ -1,8 +1,8 @@
 {
     "vectorstore": {
         "file_path": "data/vectorstore.csv",
-        "persist_directory": "/tmp/chromadb",
-        "batch_size": 100,
-        "collection_name": "news_articles"
+        "persist_directory": "./tmp/chromadb",
+        "batch_size": 50,
+        "collection_name": "articles_data"
     }
 }

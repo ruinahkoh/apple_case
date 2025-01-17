@@ -5,10 +5,11 @@ data
 .gitignore
 config.py
 Untitled.ipynb
+Books_Data.ipynb
 L4-QnA.ipynb
-
+tmp/
 # Byte-compiled / optimized / DLL files
-__pycache__/
+__pycache__/ 
 *.py[cod]
 *$py.class
 .ipynb_checkpoints
