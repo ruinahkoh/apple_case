@@ -40,16 +40,13 @@ def generate_data_store():
     collection_name = config["vectorstore"]["collection_name"]  
     vectordb = Chroma(collection_name=collection_name, embedding_function=embeddings,
                                  persist_directory=persist_directory)
-    # vectordb = Chroma.from_documents(documents=list(documents[0:100]), embedding=embeddings,
-    #                              persist_directory=persist_directory)
+    
+    if vectordb._collection.count() == 0:
+        data_list = form_batch(documents, batch_size)
+        add_to_chroma_database_with_param = partial(add_to_chroma_database, vectordb=vectordb)
 
-    data_list = form_batch(documents, batch_size)
-    add_to_chroma_database_with_param = partial(add_to_chroma_database, vectordb=vectordb)
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            executor.map(add_to_chroma_database_with_param,  data_list)
-
-    # save_to_chroma(data_list)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+                executor.map(add_to_chroma_database_with_param,  data_list)
 
     print(vectordb._collection.count())
 
