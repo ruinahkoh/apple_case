@@ -1,4 +1,3 @@
-# News Search application demonstrationg RAG
 This repo demonstrates the ability to use Retrival Augmented Generation using a chatbot to search for apple products, learn about buying strategies for apple products
 
 1. Mock data of apple products and apple educational content
