@@ -1,8 +1,12 @@
 {
     "vectorstore": {
-        "file_path": "data/vectorstore.csv",
+        "product_file": "data/apple_products.csv",
+        "education_file": "data/educational_articles.csv",
+        "inventory_file": "data/apple_inventory.csv",
         "persist_directory": "./tmp/chromadb",
         "batch_size": 50,
-        "collection_name": "articles_data"
+        "products_collection_name": "apple_products",
+        "education_collection_name": "apple_education",
+        "inventory_collection_name": "apple_inventory"
     }
 }
