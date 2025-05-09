@@ -6,16 +6,16 @@ This repo demonstrates the ability to use Retrival Augmented Generation using a 
 4. Using ChatGPT to query vectordb and return relevant products/inventory or educational content
 4. Streamlit Front end to add user input 
 
-# How to build_vectorstore
+### How to build_vectorstore
 python3 build_vectorstore.py
 
-# How to install packages 
+### How to install packages 
 pip install -r requirements.txt
 
-# How to run the app
+### How to run the app
 streamlit run app.py
 
-# Required for calling OPENAI: set your ‘OPENAI_API_KEY’ Environment Variable
+### Required for calling OPENAI: set your ‘OPENAI_API_KEY’ Environment Variable
 https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety
 
 
