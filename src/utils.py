@@ -8,10 +8,6 @@ from langchain.agents import tool
 LOGGER = logging.getLogger('logger')
 
 
-with open('src/config.json', 'r') as f:
-    config = json.load(f)
-
-
 
 def add_to_chroma_database(batch, vectordb):
     vectordb.add_documents(documents=batch)
@@ -65,6 +61,7 @@ Answer:
 
 inventory_template = """
 You are an Apple store sales assistant. Users will ask you questions about Apple products and you will make recommendations on what apple product suit them based on their budget or preferences.
+Ask for specifications of their preferences if they have not provided it.
 You should check the inventory and only recommend products which are in stock. Do not tell the customer the amount of stock, just whether it is in stock or not.
 
 A general rule of thumb when recommending products under a certain budget (150-200) you can recommend accessories
@@ -72,9 +69,16 @@ A general rule of thumb when recommending products under a certain budget (150-2
 Offer the customer a link to purchase it if it is in stock
 Only use the context to answer. If you don't know the answer, just say you don't know.
 
-Keep your replies concise and limited to 4 sentences. 
+Keep your replies concise and limited to 5 sentences and include the link. 
 
 Context: {context}
 Question: {question}
 Answer:
+""
+
+system_prompt = """
+You are a Apple store assistant. Use the apple education assistant for answering about product buying strategies or where to buy apple products, or use the apple inventory assistant for shopping queries. \
+You are allowed to make multiple calls (either together or in sequence). \
+Only look up information when you are sure of what you want. \
+If you need to look up some information before asking a follow up question, you are allowed to do that!
 """

@@ -1,79 +1,42 @@
-import json
 import streamlit as st
-# from langchain_community.chat_message_histories import StreamlitChatMessageHistory
-from build_vectorstore import generate_data_store
-from chatbot import ChatBot
-from langchain.schema import HumanMessage, AIMessage
+from langgraphchatbot import Chatbot
+from agent import Agent  # Your previously defined Agent class
+from langchain_openai import ChatOpenAI
+from langgraph.checkpoint.sqlite import SqliteSaver
+import sqlite3
+import os
 
-st.set_page_config(page_title="Apple Products Chatbot")
-st.title("Apple Products Chatbot")
-
-
-
-# with open('src/config.json', 'r') as f:
-#     config = json.load(f)
-
-# apple_education = config["vectorstore"]["education_file"]
-# education_collection_name = config["vectorstore"]["education_collection_name"] 
+working_dir = os.getcwd()
+# you can you other types of database like postgres rather than in memeory
+conn = sqlite3.connect("chat_memory.db", check_same_thread=False)  
+memory = SqliteSaver(conn)
 
 
+st.title("🍎 Apple Sales Assistant")
 
+# Initialize OpenAI model and agent
+if "chatbot" not in st.session_state:
+    model = ChatOpenAI(model="gpt-4o-mini")
+    agent = Agent(model=model, checkpointer=memory)  # make sure memory is defined or replace it
+    st.session_state.chatbot = Chatbot(agent=agent)
+    st.session_state.messages = []  # stores {"role": ..., "content": ...}
 
-# vectordb = generate_data_store(apple_education, education_collection_name)
+# Display past messages from chatbot history
+for msg in st.session_state.chatbot.history:
+    role = "user" if msg.type == "human" else "assistant"
+    with st.chat_message(role):
+        st.markdown(msg.content)
 
-
-
-# user_input = st.text_input("Please enter your query", "")
-# if user_input:
-#     with st.spinner("Generating LLM response"):
-#         response_text = query_rag(user_input, vectordb)
-#         st.write(response_text)
-
-
-bot = ChatBot()
-def convert_session_to_messages(session_messages):
-    converted = []
-    for m in session_messages:
-        if m["role"] == "user":
-            converted.append(HumanMessage(content=m["content"]))
-        else:
-            converted.append(AIMessage(content=m["content"]))
-    return converted
-
-
-#Function for generating LLM response
-def generate_response(input):
-    # result = bot.rag_chain.invoke(input)
-  
-
-    result = bot.agent.invoke({"input": input})
-
-   
-    return result
-
-
-#Store LLM generated responses
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "Hello! I'm Apple Store Chatbot. How can I assist you today?"}]
-
-# Display chat messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
-
-# User-provided prompt
-if input := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": input})
+# Handle new user input
+if prompt := st.chat_input("Ask me about Apple products or inventory..."):
     with st.chat_message("user"):
-        st.write(input)
+        st.markdown(prompt)
 
+    # Send user input through chatbot (adds both user and assistant to history)
+    st.session_state.chatbot.send(prompt)
 
-# Generate a new response if last message is not from assistant
-if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        with st.spinner("Getting your answer from mystery stuff.."):
-            response = generate_response(input) 
-            result_text = response['output']
-            st.write(result_text) 
-    message = {"role": "assistant", "content": response["output"]}
-    st.session_state.messages.append(message)
+   # Get the latest assistant response
+    response_msg = st.session_state.chatbot.history[-1]
+    if response_msg.type == "ai":
+        with st.chat_message("assistant"):
+            st.markdown(response_msg.content)
