@@ -63,30 +63,24 @@ class ChatBot:
         llm = ChatOpenAI(model_name=model_name)
 
         # define prompts
-        # prompt = PromptTemplate(template=products_template, input_variables=["context", "question"])
-        prompt2 = PromptTemplate(template=education_template, input_variables=["context", "question"])
-        prompt3 = PromptTemplate(template=inventory_template, input_variables=["context", "question"])
+        prompt = PromptTemplate(template=education_template, input_variables=["context", "question"])
+        prompt2 = PromptTemplate(template=inventory_template, input_variables=["context", "question"])
         
      
       
 
         self.education_chain = RetrievalQA.from_chain_type(
-            llm, retriever=education_vectordb.as_retriever(), chain_type_kwargs={"prompt": prompt2}
+            llm, retriever=education_vectordb.as_retriever(), chain_type_kwargs={"prompt": prompt}
         )
 
         self.inventory_chain = RetrievalQA.from_chain_type(
-            llm, retriever=inventory_vectordb.as_retriever(), chain_type_kwargs={"prompt": prompt3
+            llm, retriever=inventory_vectordb.as_retriever(), chain_type_kwargs={"prompt": prompt2
             }
         )
 
 
         # Define tools properly
         tools = [
-            # Tool(
-            #     name="Apple Sales Assistant",
-            #     func=self.rag_chain.run,
-            #     description="useful for answering questions about apple products recommendations including pricing, tech specs and descriptions."
-            # ),
             Tool(
                 name="Apple Education Assistant",
                 func=self.education_chain.run,
