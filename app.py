@@ -9,27 +9,6 @@ st.set_page_config(page_title="Apple Products Chatbot")
 st.title("Apple Products Chatbot")
 
 
-
-# with open('src/config.json', 'r') as f:
-#     config = json.load(f)
-
-# apple_education = config["vectorstore"]["education_file"]
-# education_collection_name = config["vectorstore"]["education_collection_name"] 
-
-
-
-
-# vectordb = generate_data_store(apple_education, education_collection_name)
-
-
-
-# user_input = st.text_input("Please enter your query", "")
-# if user_input:
-#     with st.spinner("Generating LLM response"):
-#         response_text = query_rag(user_input, vectordb)
-#         st.write(response_text)
-
-
 bot = ChatBot()
 def convert_session_to_messages(session_messages):
     converted = []
@@ -43,12 +22,7 @@ def convert_session_to_messages(session_messages):
 
 #Function for generating LLM response
 def generate_response(input):
-    # result = bot.rag_chain.invoke(input)
-  
-
-    result = bot.agent.invoke({"input": input})
-
-   
+    result = bot.agent.invoke({"input": input})   
     return result
 
 
