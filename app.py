@@ -39,4 +39,5 @@ if prompt := st.chat_input("Ask me about Apple products or inventory..."):
     response_msg = st.session_state.chatbot.history[-1]
     if response_msg.type == "ai":
         with st.chat_message("assistant"):
-            st.markdown(response_msg.content)
+            with st.spinner("Getting your answer from mystery stuff.."):
+                st.markdown(response_msg.content)
