@@ -30,9 +30,6 @@ def convert_session_to_messages(session_messages):
             converted.append(AIMessage(content=m["content"]))
     return converted
 
-# Initialize memory only once per session
-
-
 #Function for generating LLM response
 def generate_response(input):
     result = bot.agent.invoke({"input": input})   
