@@ -33,7 +33,7 @@ batch_size = config["vectorstore"]["batch_size"]
 
 class ChatBot:
     load_dotenv()
-    def __init__(self):
+    def __init__(self, memory):
 
         
         # define embeddings
@@ -92,17 +92,6 @@ class ChatBot:
                 description="useful for checking on the inventory of products."
             ),
         ]
-
-        agent_memory = ConversationBufferMemory(
-            memory_key="chat_history", 
-            return_messages=True,    # important for agent
-            input_key="input"        # set input key properly
-        )
        
-        self.agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, memory=agent_memory)
+        self.agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, memory=memory)
     
-        
-        
-# Usage example:
-if __name__ == "__main__":
-    chatbot = ChatBot()

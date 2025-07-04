@@ -4,12 +4,23 @@ import streamlit as st
 from build_vectorstore import generate_data_store
 from chatbot import ChatBot
 from langchain.schema import HumanMessage, AIMessage
+from langchain.chains.conversation.memory import ConversationBufferMemory
 
 st.set_page_config(page_title="Apple Products Chatbot")
 st.title("Apple Products Chatbot")
 
 
-bot = ChatBot()
+# Create the memory once
+memory = ConversationBufferMemory(
+        memory_key="chat_history",
+        return_messages=True,
+        input_key="input"
+    )
+
+if "memory" not in st.session_state:
+    st.session_state.memory = memory
+
+bot = ChatBot(memory=st.session_state.memory)
 def convert_session_to_messages(session_messages):
     converted = []
     for m in session_messages:
@@ -18,6 +29,8 @@ def convert_session_to_messages(session_messages):
         else:
             converted.append(AIMessage(content=m["content"]))
     return converted
+
+# Initialize memory only once per session
 
 
 #Function for generating LLM response
